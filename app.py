@@ -1,8 +1,9 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend communication
+CORS(app)
 
 @app.route('/bfhl', methods=['POST'])
 def process_data():
@@ -14,6 +15,7 @@ def process_data():
         input_data = data["data"]
         numbers = [x for x in input_data if x.isdigit()]
         alphabets = [x for x in input_data if x.isalpha()]
+
         highest_alphabet = max(alphabets, key=str.lower) if alphabets else []
 
         response = {
@@ -34,5 +36,5 @@ def get_operation_code():
     return jsonify({"operation_code": 1}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
- 
+    port = int(os.environ.get("PORT", 5000))  # Dynamically use Render's PORT
+    app.run(host='0.0.0.0', port=port, debug=True)
